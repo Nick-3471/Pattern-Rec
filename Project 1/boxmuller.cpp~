@@ -8,7 +8,7 @@ this software for any application provided this
 copyright notice is preserved.
 
 */
-#include "boxmuller"
+
 #include <math.h>
 #include <stdio.h>
 //#include <iostream>
@@ -23,9 +23,9 @@ int main(){
 float test;
 
 test = box_muller(1, 0);
-printf("%.6f", test);
+printf( test );
 test = box_muller(1, 0);
-printf("%.6f", test);
+printf( test );
 
 return 0;
 }
