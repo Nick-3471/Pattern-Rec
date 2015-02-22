@@ -5,6 +5,7 @@
 // Brian Goga
 ///////////////////////////////////////////////////////////////////////////////
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <cmath>
 
@@ -75,65 +76,105 @@ void assignPoints(double** array, point* points, int percent)
 
 int main()
 {
+	srand(time(NULL));
+
+	ofstream fout;
+
 	double mean1[2][1] = {{1.0}, {1.0}};
 	double mean2[2][1] = {{4.0}, {4.0}};
-	double** swag;
+	double** pointArray;
 
 	point* data = new point[10000];
 
 	double x1, x2, y1, y2 , w;
 
-	Gauss(&swag);
+	Gauss(&pointArray);
 
-	srand(time(NULL));
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 1 A
-////////////////////////////////////////	//////////////////////////////////////////////////////////////
-assignPoints(swag, data, 5);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//assign points a mean 
+assignPoints(pointArray, data, 5);
+
 double val1, val2, val3;
 double valX1, valX2 , valY2, valY1;
 
+//counter for misclassification
 int error = 0;
-valX1 = 1 - 4;
-valY2 = 1 - 4;
-val3 = 15;
 
+//arithmetic values
+valX1 = valY2 = 1 - 4;
+val3 = 7;
+
+//classify points
 for(int q = 0; q < 10000; q++)
 {
 
-	/*valX1 = (-data[q].x_value * data[q].x_value);
-	valX1 = (-data[q].y_value * data[q].y_value);
-	val1 = valX1 + valX1;
+	//calculating X-mean * X-mean transpose of first mean
+	valX1 = (-(data[q].x_value -1) * (data[q].x_value -1));
+	valY1 = (-(data[q].y_value -1) * (data[q].y_value -1));
+	val1 = valX1 + valY1;
 
-	valY1 = (-data[q].x_value * data[q].x_value);
-	valY1 = (-data[q].y_value * data[q].y_value);
-	val2 = valY1 + valY1;*/
+	//calculating X-mean * X-mean transpose of second mean
+	valX2 = (-(data[q].x_value -4) * (data[q].x_value -4));
+	valY2 = (-(data[q].y_value -4) * (data[q].y_value -4));
+	val2 = valX2 + valY2;
 
-	val1 = valX1 * data[q].x_value;
-	val2 = valY2 * data[q].y_value;
-
-	if((val1 + val2 + val3) > 0 )
+	//if val2 > than val1 then point belongs to first category
+	if(val1 - val2 > 0 )
 	{
 		data[q].category = 1;
 	}
+
+	//if val1 > than val2 then point belongs to second category	
 	else
 	{
 		data[q].category = 2;
 	}
 
+	//determine if misclassified
 	if(data[q].category != data[q].mean)
 	{
 		error++;
 	}
 }
+
+//cout error count
 cout << endl<< error << endl;
 
+//print data to file
+
+//print x_values
+fout.open("text1_x.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].x_value<<endl;
+	}
+fout.close();
+
+//print x_values
+fout.open("text1_y.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].y_value<<endl;
+	}
+fout.close();
+
+//print x_values
+fout.open("text1_m.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].mean<<endl;
+	}
+fout.close();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 1 A
+// 1 B
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-assignPoints(swag, data, 7);
+assignPoints(pointArray, data, 7);
 int error1B = 0;
 
 double Sigma [2][2] = {{4,0},{0, 16}};
@@ -146,7 +187,7 @@ for (int q = 0; q < 10000; q++)
 	valY2 = ((data[q].x_value - 4) * Sigma[1][0] + (data[q].y_value - 1) * Sigma[1][1]) * (data[q].y_value - 4);
 
 	val1 = valX1 + valY1 + log(.7);
-	val2 = valX2 + valY2+ log(.3);
+	val2 = valX2 + valY2 + log(.3);
 
 	if((val1 + val2) > 0 )
 	{
@@ -164,7 +205,7 @@ for (int q = 0; q < 10000; q++)
 }
 cout << endl<< error1B << endl;
 
-	delete swag;
+	delete pointArray;
 	delete data;
 	return 0;
 }
