@@ -180,14 +180,22 @@ int error1B = 0;
 double Sigma [2][2] = {{4,0},{0, 16}};
 for (int q = 0; q < 10000; q++)
 {
-	valX1 = ((data[q].x_value - 1) * Sigma[0][0] + (data[q].y_value - 1) * Sigma[0][1]) * (data[q].x_value - 1);
-	valY1 = ((data[q].x_value - 1) * Sigma[1][0] + (data[q].y_value - 1) * Sigma[1][1]) * (data[q].y_value - 1);
+//calculating X-mean * X-mean transpose of first mean
+	valX1 = ((data[q].x_value -1) * (data[q].x_value -1));
+	valY1 = ((data[q].y_value -1) * (data[q].y_value -1));
+	val1 = valX1 + valY1;
 
-	valX2 = ((data[q].x_value - 4) * Sigma[0][0] + (data[q].y_value - 1) * Sigma[0][1]) * (data[q].x_value - 4);
-	valY2 = ((data[q].x_value - 4) * Sigma[1][0] + (data[q].y_value - 1) * Sigma[1][1]) * (data[q].y_value - 4);
+	//calculating X-mean * X-mean transpose of second mean
+	valX2 = (-(data[q].x_value -4) * (data[q].x_value -4));
+	valY2 = (-(data[q].y_value -4) * (data[q].y_value -4));
+	val2 = valX2 + valY2;
 
-	val1 = valX1 + valY1 + log(.7);
-	val2 = valX2 + valY2 + log(.3);
+	val1 = val1 * (-.5);
+	val2 = val2 * (-.5);
+
+	val1 = val1 + log(.3);
+	val2 = val2 + log(.7);
+
 
 	if((val1 + val2) > 0 )
 	{
@@ -204,6 +212,31 @@ for (int q = 0; q < 10000; q++)
 	}
 }
 cout << endl<< error1B << endl;
+
+
+fout.open("text2_x.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].x_value<<endl;
+	}
+fout.close();
+
+//print x_values
+fout.open("text2_y.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].y_value<<endl;
+	}
+fout.close();
+
+//print x_values
+fout.open("text2_m.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].mean<<endl;
+	}
+fout.close();
+
 
 	delete pointArray;
 	delete data;
