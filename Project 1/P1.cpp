@@ -143,7 +143,8 @@ for(int q = 0; q < 10000; q++)
 }
 
 //cout error count
-cout << endl<< error << endl;
+cout<<"---Printing error count for 1B---"<<endl;
+cout << error << endl;
 
 //print data to file
 
@@ -210,7 +211,8 @@ for (int q = 0; q < 10000; q++)
 		error1B++;
 	}
 }
-cout << endl<< error1B << endl;
+cout<<"---Printing error count for 1B---"<<endl;
+cout << error1B << endl;
 
 //calculate Chernoff Bound
 double betaPoints[20];
@@ -319,7 +321,8 @@ for(int q = 0; q < 10000; q++)
 }
 
 //cout error count
-cout << endl<< error2A << endl;
+cout<<"---Printing error count for 2A---"<<endl;
+cout << error2A << endl;
 
 //print data to file
 
@@ -403,7 +406,8 @@ for(int q = 0; q < 10000; q++)
 }
 
 //cout error count
-cout << endl<< error1B << endl;
+cout<<"---Printing error count for 2B---"<<endl;
+cout << error1B << endl;
 
 //calculate Chernoff Bound
 
