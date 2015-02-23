@@ -212,6 +212,35 @@ for (int q = 0; q < 10000; q++)
 }
 cout << endl<< error1B << endl;
 
+//calculate Chernoff Bound
+double betaPoints[20];
+double coef, beta, decimal;
+double top, bottom;
+double temp[2];
+
+for(int i = 0; i<20; i++)
+{
+	beta = i *.05;
+	coef = (beta * (1-beta)) /2;
+
+	temp[0] = beta + (1-beta);
+	temp[1] = beta + (1-beta);
+
+	top = temp[0] * temp[1];
+	bottom = 1;
+
+	decimal = .5 * log(top/bottom);
+
+	betaPoints[i] = coef * (3 * 3 * (1/temp[0]) + 3 * 3 * (1/temp[1])) + decimal;
+}
+
+//output data to text files to be graphed
+fout.open("C_Bound1.txt");
+for(int i = 0; i<20; i++)
+	{
+		fout<<betaPoints[i]<<endl;
+	}
+fout.close();
 
 fout.open("text2_x.txt");
 for(int i = 0; i<10000; i++)
@@ -376,7 +405,31 @@ for(int q = 0; q < 10000; q++)
 //cout error count
 cout << endl<< error1B << endl;
 
-//print data to file
+//calculate Chernoff Bound
+
+for(int i = 0; i<20; i++)
+{
+	beta = i *.05;
+	coef = (beta * (1-beta)) /2;
+
+	temp[0] = beta + (1-beta) * 4;
+	temp[1] = beta + (1-beta) * 16;
+
+	top = temp[0] * temp[1];
+	bottom = pow(64, (1-beta));
+
+	decimal = .5 * log(top/bottom);
+
+	betaPoints[i] = coef * (3 * 3 * (1/temp[0]) + 3 * 3 * (1/temp[1])) + decimal;
+}
+
+//output data to text files to be graphed
+fout.open("C_Bound2.txt");
+for(int i = 0; i<20; i++)
+	{
+		fout<<betaPoints[i]<<endl;
+	}
+fout.close();
 
 //print x_values
 fout.open("text4_x.txt");
