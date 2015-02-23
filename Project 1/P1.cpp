@@ -177,7 +177,6 @@ fout.close();
 assignPoints(pointArray, data, 7);
 int error1B = 0;
 
-double Sigma [2][2] = {{4,0},{0, 16}};
 for (int q = 0; q < 10000; q++)
 {
 //calculating X-mean * X-mean transpose of first mean
@@ -236,6 +235,173 @@ for(int i = 0; i<10000; i++)
 		fout<<data[i].mean<<endl;
 	}
 fout.close();
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 2 A
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//assign points a mean 
+assignPoints(pointArray, data, 5);
+
+double Sigma [2][2] = {{4,0},{0, 16}};
+
+//counter for misclassification
+int error2A = 0;
+
+//arithmetic values
+valX1 = valY2 = 1 - 4;
+val3 = 7;
+
+//classify points
+for(int q = 0; q < 10000; q++)
+{
+
+	//calculating X-mean * X-mean transpose of first mean
+	valX1 = (-(data[q].x_value -1) * (data[q].x_value -1));
+	valY1 = (-(data[q].y_value -1) * (data[q].y_value -1));
+	val1 = valX1 + valY1;
+
+	//calculating X-mean * X-mean transpose of second mean
+	valX2 = ((data[q].x_value -4) * (data[q].x_value -4) * .25);
+	valY2 = ((data[q].y_value -4) * (data[q].y_value -4) * .0625);
+	val2 = valX2 + valY2;
+
+	val1 = val1 * (.25);
+	val2 = val2 * (.25);
+
+
+	//if val2 > than val1 then point belongs to first category
+	if(val1 + val2 > -2 )
+	{
+		data[q].category = 1;
+	}
+
+	//if val1 > than val2 then point belongs to second category	
+	else
+	{
+		data[q].category = 2;
+	}
+
+	//determine if misclassified
+	if(data[q].category != data[q].mean)
+	{
+		error2A++;
+	}
+}
+
+//cout error count
+cout << endl<< error2A << endl;
+
+//print data to file
+
+//print x_values
+fout.open("text3_x.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].x_value<<endl;
+	}
+fout.close();
+
+//print x_values
+fout.open("text3_y.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].y_value<<endl;
+	}
+fout.close();
+
+//print x_values
+fout.open("text3_m.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].mean<<endl;
+	}
+fout.close();
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 2 B
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//assign points a mean 
+//assign points a mean 
+assignPoints(pointArray, data, 7);
+
+//counter for misclassification
+int error2B= 0;
+
+//arithmetic values
+valX1 = valY2 = 1 - 4;
+val3 = 7;
+
+//classify points
+for(int q = 0; q < 10000; q++)
+{
+
+	//calculating X-mean * X-mean transpose of first mean
+	valX1 = (-(data[q].x_value -1) * (data[q].x_value -1));
+	valY1 = (-(data[q].y_value -1) * (data[q].y_value -1));
+	val1 = valX1 + valY1;
+
+	//calculating X-mean * X-mean transpose of second mean
+	valX2 = ((data[q].x_value -4) * .25 * (data[q].x_value -4));
+	valY2 = ((data[q].y_value -4) * .0625 * (data[q].y_value -4));
+	val2 = valX2 + valY2;
+
+	val1 = val1 * (.25);
+	val2 = val2 * (.25);
+
+	/*val1 = val1 + log(.7);
+	val2 = val2 + log(.3);*/
+
+	//if val2 > than val1 then point belongs to first category
+	if(val1 + val2 > -2 )
+	{
+		data[q].category = 1;
+	}
+
+	//if val1 > than val2 then point belongs to second category	
+	else
+	{
+		data[q].category = 2;
+	}
+
+	//determine if misclassified
+	if(data[q].category != data[q].mean)
+	{
+		error1B++;
+	}
+}
+
+//cout error count
+cout << endl<< error1B << endl;
+
+//print data to file
+
+//print x_values
+fout.open("text4_x.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].x_value<<endl;
+	}
+fout.close();
+
+//print x_values
+fout.open("text4_y.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].y_value<<endl;
+	}
+fout.close();
+
+//print x_values
+fout.open("text4_m.txt");
+for(int i = 0; i<10000; i++)
+	{
+		fout<<data[i].mean<<endl;
+	}
+fout.close();
+
 
 
 	delete pointArray;
