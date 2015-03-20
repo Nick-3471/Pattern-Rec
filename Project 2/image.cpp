@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#include "image.h"
+	#include "image.h"
 
 ImageType::ImageType()
 {
@@ -22,11 +22,15 @@ ImageType::ImageType(int tmpN, int tmpM, int tmpQ)
  M = tmpM;
  Q = tmpQ;
 
- pixelValue = new int* [N];
+ pixelValue = new RGB* [N];
  for(i=0; i<N; i++) {
-   pixelValue[i] = new int[M];
+   pixelValue[i] = new RGB[M];
    for(j=0; j<M; j++)
-     pixelValue[i][j] = 0;
+   {
+     pixelValue[i][j].r = 0;
+     pixelValue[i][j].g = 0;
+     pixelValue[i][j].b = 0;
+   }
  }
 }
 
@@ -44,12 +48,16 @@ void ImageType::setImageInfo(int rows, int cols, int levels)
  Q= levels;
 } 
 
-void ImageType::setPixelVal(int i, int j, int val)
+void ImageType::setPixelVal(int i, int j, RGB val)
 {
- pixelValue[i][j] = val;
+ pixelValue[i][j].r = val.r;
+ pixelValue[i][j].g = val.g;
+ pixelValue[i][j].b = val.b;
 }
 
-void ImageType::getPixelVal(int i, int j, int& val)
+void ImageType::getPixelVal(int i, int j, RGB& val)
 {
- val = pixelValue[i][j];
+ val.r = pixelValue[i][j].r;
+ val.g = pixelValue[i][j].g;
+ val.b = pixelValue[i][j].b;
 }
