@@ -1,5 +1,5 @@
 ///////////////////////////
-//Project 2
+//Project 2, parts 1 and 2
 //Brian Goga & Nicholas Smith
 //CS 479
 //////////////////////////
@@ -368,8 +368,8 @@ for(int i = 5000; i < 10000; i++)
 	mean2[0] += data[i].x_value;
 	mean2[1] += data[i].y_value;
 }
-mean2[0] = mean2[0] / 5000.0; 
-mean2[1] = mean2[1] / 5000.0; 
+mean2[0] = (mean2[0] / 5000.0); 
+mean2[1] = (mean2[1] / 5000.0); 
 
 //Pinrt mean
 cout << endl  << "Printing Mean and covariance for 2a: " << endl;
@@ -385,10 +385,10 @@ for(int i = 0; i < 5000; i++)
 	data[i].x_value -= mean1[0];
 	data[i].y_value -= mean1[1];
 
-	Sigma1[0][0] += data[i].x_value * data[i].x_value;
+	Sigma1[0][0] += data[i].x_value * data[i].x_value* mean1[0];
 	Sigma1[0][1] += data[i].x_value * data[i].y_value;
 	Sigma1[1][0] += data[i].y_value * data[i].x_value;
-	Sigma1[1][1] += data[i].y_value * data[i].y_value;
+	Sigma1[1][1] += data[i].y_value * data[i].y_value* mean1[0] * mean1[1];
 
 	data[i].x_value += mean1[0];
 	data[i].y_value += mean1[1];
@@ -405,10 +405,10 @@ for(int i = 5000; i < 10000; i++)
 	data[i].x_value -= mean2[0];
 	data[i].y_value -= mean2[1];
 
-	Sigma2[0][0] += data[i].x_value * data[i].x_value;
+	Sigma2[0][0] += data[i].x_value * data[i].x_value * mean2[0];
 	Sigma2[0][1] += data[i].x_value * data[i].y_value;
 	Sigma2[1][0] += data[i].y_value * data[i].x_value;
-	Sigma2[1][1] += data[i].y_value * data[i].y_value;
+	Sigma2[1][1] += data[i].y_value * data[i].y_value * mean2[0] * mean2[1];
 
 	data[i].x_value += mean2[0];
 	data[i].y_value += mean2[1];
@@ -454,7 +454,7 @@ for(int q = 0; q < 10000; q++)
 		error++;
 	}
 }
-cout << endl <<"Printing error count for 1a: ";
+cout << endl <<"Printing error count for 2a: ";
 cout  << endl << error;
 /////////////////////////////////////////////////////////////////////////////////////////
 //2b
@@ -499,7 +499,7 @@ mean2[0] = mean2[0] / 500.0;
 mean2[1] = mean2[1] / 500.0; 
 
 //Pinrt mean
-cout << endl << endl << "Printing Mean and covariance for 1b: " << endl;
+cout << endl << endl << "Printing Mean and covariance for 2b: " << endl;
 cout << mean1[0] << " " << mean1[1] << "  -  " << mean2[0]<< " " << mean2[1] << endl << endl;
  
 
@@ -512,10 +512,10 @@ for(int i = 0; i < 500; i++)
 	sampleArray[i].x_value -= mean1[0];
 	sampleArray[i].y_value -= mean1[1];
 
-	Sigma1[0][0] += sampleArray[i].x_value * sampleArray[i].x_value;
+	Sigma1[0][0] += sampleArray[i].x_value * sampleArray[i].x_value* mean1[0];
 	Sigma1[0][1] += sampleArray[i].x_value * sampleArray[i].y_value;
 	Sigma1[1][0] += sampleArray[i].y_value * sampleArray[i].x_value;
-	Sigma1[1][1] += sampleArray[i].y_value * sampleArray[i].y_value;
+	Sigma1[1][1] += sampleArray[i].y_value * sampleArray[i].y_value * mean1[0] * mean1[1];
 
 	sampleArray[i].x_value += mean1[0];
 	sampleArray[i].y_value += mean1[1];
@@ -532,10 +532,10 @@ for(int i = 500; i < 1000; i++)
 	sampleArray[i].x_value -= mean2[0];
 	sampleArray[i].y_value -= mean2[1];
 
-	Sigma2[0][0] += sampleArray[i].x_value * sampleArray[i].x_value;
+	Sigma2[0][0] += sampleArray[i].x_value * sampleArray[i].x_value * mean2[0];
 	Sigma2[0][1] += sampleArray[i].x_value * sampleArray[i].y_value;
 	Sigma2[1][0] += sampleArray[i].y_value * sampleArray[i].x_value;
-	Sigma2[1][1] += sampleArray[i].y_value * sampleArray[i].y_value;
+	Sigma2[1][1] += sampleArray[i].y_value * sampleArray[i].y_value * mean2[0] * mean2[1];
 
 	sampleArray[i].x_value += mean2[0];
 	sampleArray[i].y_value += mean2[1];
@@ -582,7 +582,7 @@ for(int q = 0; q < 1000; q++)
 		error++;
 	}
 }
-cout << endl <<"Printing error count for 1b: ";
+cout << endl <<"Printing error count for 2b: ";
 cout << endl << error << endl << endl;
 
 //return
