@@ -33,8 +33,9 @@ int main()
 //Variables
 char pic[30] = "Training_1.ppm";
 char out[30] = "Output_1.ppm";
+double mean[2], sigma[2][2] = {{0,0}, {0,0}};
 int N,M,Q;
-float R,G;
+double R,G,bottom;
 int counter;
 bool picture;
 node *root, *conductor;
@@ -67,20 +68,42 @@ gatherPoints(conductor, 1583, 106, 1625, 169, MyImage);
 
 //Normalize R and G using R = r/(r+g+b), G = g/(r+g+b)
 conductor = root;
-R = G = 0;
+R = G = 0.0;
 counter = 0;
 
 while(conductor->next != NULL)
 {
- R += conductor->here.r / (conductor->here.r + conductor->here.g + conductor->here.b);
- G += conductor->here.g / (conductor->here.r + conductor->here.g + conductor->here.b);
+ bottom = (conductor->here.r + conductor->here.g + conductor->here.b);
+ R += conductor->here.r / bottom;
+ G += conductor->here.g / bottom;
  
- cout<<conductor->here.r / (conductor->here.r + conductor->here.g + conductor->here.b)<<endl;
  counter++;
  conductor=conductor->next;
 }
 
-cout<<R<<" "<<G<<endl;
+R = R / double(counter);
+G = G / double(counter);
+
+//store R and G as mean for skin recog
+mean[0] = R;
+mean[1] = G;
+
+//calculate Sigma
+conductor = root;
+R = G = 0.0;
+
+while(conductor->next != NULL)
+{
+ bottom = (conductor->here.r + conductor->here.g + conductor->here.b);
+ sigma[0][0] += (conductor->here.r / bottom - mean[0]) * (conductor->here.r / bottom - mean[0]);
+ sigma[0][1] += (conductor->here.r / bottom - mean[0]) * (conductor->here.g / bottom - mean[1]);
+ sigma[1][0] += (conductor->here.g / bottom - mean[1]) * (conductor->here.r / bottom - mean[0]);
+ sigma[1][1] += (conductor->here.g / bottom - mean[1]) * (conductor->here.g / bottom - mean[1]);
+ 
+ conductor=conductor->next;
+}
+
+cout << sigma[0][0] << ' ' << sigma[0][1] << endl << sigma[1][0] << ' ' << sigma[1][1] << endl;
 
 //Write Output image
 writeImage(out, MyImage);
