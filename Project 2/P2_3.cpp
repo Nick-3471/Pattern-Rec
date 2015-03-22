@@ -13,12 +13,18 @@
 
 using namespace std;
 
+//Structs
+struct node
+{
+ RGB here;
+ node *next;
+};
+
 //Functions
 void readImageHeader(char fname[], int& N, int& M, int& Q, bool& type);
 void readImage(char fname[], ImageType& image);
 void writeImage(char fname[], ImageType& image);
-
-
+void gatherPoints(node* &list, int x1, int y1, int x2, int y2, ImageType& image);
 
 //main
 int main()  
@@ -28,14 +34,53 @@ int main()
 char pic[30] = "Training_1.ppm";
 char out[30] = "Output_1.ppm";
 int N,M,Q;
+float R,G;
+int counter;
 bool picture;
+node *root, *conductor;
+root = new node;
+conductor = root;
 
+//read in image
 readImageHeader(pic, N, M, Q, picture);
 ImageType MyImage(N, M, Q);
 readImage(pic,MyImage);
 
+//Teach the program what is "skin color"
+gatherPoints(conductor, 118, 591, 170, 614, MyImage);
+gatherPoints(conductor, 319, 471, 367, 488, MyImage);
+gatherPoints(conductor, 320, 244, 360, 260, MyImage);
+gatherPoints(conductor, 419, 417, 460, 431, MyImage);
+gatherPoints(conductor, 530, 481, 574, 496, MyImage);
+gatherPoints(conductor, 607, 443, 644, 458, MyImage);
+gatherPoints(conductor, 760, 475, 804, 491, MyImage);
+gatherPoints(conductor, 826, 352, 869, 366, MyImage);
+gatherPoints(conductor, 869, 543, 914, 558, MyImage);
+gatherPoints(conductor, 988, 384, 1027, 395, MyImage);
+gatherPoints(conductor, 1007, 555, 1064, 576, MyImage);
+gatherPoints(conductor, 1102, 420, 1148, 438, MyImage);
+gatherPoints(conductor, 1246, 416, 1288, 439, MyImage);
+gatherPoints(conductor, 1403, 434, 1456, 452, MyImage);
+gatherPoints(conductor, 1365, 205, 1405, 212, MyImage);
+gatherPoints(conductor, 1574, 524, 1624, 538, MyImage);
+gatherPoints(conductor, 1583, 106, 1625, 169, MyImage);
 
+//Normalize R and G using R = r/(r+g+b), G = g/(r+g+b)
+conductor = root;
+R = G = 0;
+counter = 0;
 
+while(conductor->next != NULL)
+{
+ R += conductor->here.r / (conductor->here.r + conductor->here.g + conductor->here.b);
+ G += conductor->here.g / (conductor->here.r + conductor->here.g + conductor->here.b);
+ 
+ cout<<conductor->here.r / (conductor->here.r + conductor->here.g + conductor->here.b)<<endl;
+ counter++;
+ conductor=conductor->next;
+}
+
+cout<<R<<" "<<G<<endl;
 
 //Write Output image
 writeImage(out, MyImage);
@@ -206,3 +251,51 @@ void writeImage(char fname[], ImageType& image)
 
  delete [] charImage;
 }
+
+void gatherPoints(node* &list, int x1, int y1, int x2, int y2, ImageType& image)
+{
+  //variables
+  node* pointer;
+  pointer = list;
+
+  //loop through patch gathering rgb values and adding them to the list
+  //loop through Y values
+  for(int i = y1; i <= y2; i++)
+  {
+    //loop through X values
+    for(int j = x1; j <= x2; j++)
+    {
+
+      //add current points rgb values to the list
+      image.getPixelVal(i,j,pointer->here);
+
+      pointer->next = new node;
+      pointer = pointer->next;
+      pointer->next = NULL;
+    }
+  }
+  //end
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
