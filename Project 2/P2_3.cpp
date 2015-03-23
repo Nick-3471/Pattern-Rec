@@ -31,21 +31,38 @@ int main()
 {
 
 //Variables
-char pic[30] = "Training_1.ppm";
-char out[30] = "Output_1.ppm";
+char pic1[30] = "Training_1.ppm";
+char out1[30] = "Output_1.ppm";
+char pic3[30] = "Training_3.ppm";
+char out3[30] = "Output_3.ppm";
+char pic6[30] = "Training_6.ppm";
+char out6[30] = "Output_6.ppm";
 double mean[2], sigma[2][2] = {{0,0}, {0,0}};
 int N,M,Q;
-double R,G,bottom;
+double R,G,bottom, threshR, threshG;
 int counter;
 bool picture;
 node *root, *conductor;
 root = new node;
 conductor = root;
+RGB temp, White, Black;
+
 
 //read in image
-readImageHeader(pic, N, M, Q, picture);
+readImageHeader(pic1, N, M, Q, picture);
 ImageType MyImage(N, M, Q);
-readImage(pic,MyImage);
+ImageType TestImage(N, M, Q);
+readImage(pic1,MyImage);
+
+readImageHeader(pic3, N, M, Q, picture);
+ImageType MyImage3(N, M, Q);
+readImage(pic3,MyImage3);
+
+readImageHeader(pic6, N, M, Q, picture);
+ImageType MyImage6(N, M, Q);
+readImage(pic6,MyImage6);
+
+
 
 //Teach the program what is "skin color"
 gatherPoints(conductor, 118, 591, 170, 614, MyImage);
@@ -65,6 +82,7 @@ gatherPoints(conductor, 1403, 434, 1456, 452, MyImage);
 gatherPoints(conductor, 1365, 205, 1405, 212, MyImage);
 gatherPoints(conductor, 1574, 524, 1624, 538, MyImage);
 gatherPoints(conductor, 1583, 106, 1625, 169, MyImage);
+
 
 //Normalize R and G using R = r/(r+g+b), G = g/(r+g+b)
 conductor = root;
@@ -103,10 +121,104 @@ while(conductor->next != NULL)
  conductor=conductor->next;
 }
 
-cout << sigma[0][0] << ' ' << sigma[0][1] << endl << sigma[1][0] << ' ' << sigma[1][1] << endl;
+//Testing
+R = G = 0.0;
+
+White.r = 255;
+White.g = 255;
+White.b = 255;
+
+Black.r = 0;
+Black.g = 0;
+Black.b = 0;
+
+for(int j = 0; j < 1392; j++)
+{
+  for(int i = 0; i < 1856; i++ )
+      {
+        MyImage.getPixelVal(j, i, temp);
+
+        bottom = (temp.r + temp.g + temp.b);
+        R = temp.r / bottom;
+        G = temp.g / bottom;
+
+        threshR = exp(-(sigma[0][0] * pow((R - mean[0]),2) +  sigma[0][1] * (R- mean[0]))); 
+        threshG = exp(-(sigma[1][0] * (G - mean[1]) + sigma[1][1] * pow((G - mean[1]),2)));
+
+        //cout << threshR << ' ' << threshG << endl;
+
+        if((threshR >= .9 && threshG >= 1.0 && threshG < 1.2) || (threshR <= .8 && threshR >= .7 && threshG > 1.1) )
+        {
+          TestImage.setPixelVal(j, i, White);
+        }
+        else
+        {
+          TestImage.setPixelVal(j, i, Black);
+        }
+      }
+}
+writeImage(out1, TestImage);
+
+
+
+for(int j = 0; j < 1392; j++)
+{
+  for(int i = 0; i < 1856; i++ )
+      {
+        MyImage3.getPixelVal(j, i, temp);
+
+        bottom = (temp.r + temp.g + temp.b);
+        R = temp.r / bottom;
+        G = temp.g / bottom;
+
+        threshR = exp(-(sigma[0][0] * pow((R - mean[0]),2) +  sigma[0][1] * (R- mean[0]))); 
+        threshG = exp(-(sigma[1][0] * (G - mean[1]) + sigma[1][1] * pow((G - mean[1]),2)));
+
+        //cout << threshR << ' ' << threshG << endl;
+
+        if((threshR >= .9 && threshG >= 1.0 && threshG < 1.2) || (threshR <= .8 && threshR >= .7 && threshG > 1.1) )
+        {
+          TestImage.setPixelVal(j, i, White);
+        }
+        else
+        {
+          TestImage.setPixelVal(j, i, Black);
+        }
+      }
+}
+writeImage(out3, TestImage);
+
+
+
+for(int j = 0; j < 1392; j++)
+{
+  for(int i = 0; i < 1856; i++ )
+      {
+        MyImage6.getPixelVal(j, i, temp);
+
+        bottom = (temp.r + temp.g + temp.b);
+        R = temp.r / bottom;
+        G = temp.g / bottom;
+
+        threshR = exp(-(sigma[0][0] * pow((R - mean[0]),2) +  sigma[0][1] * (R- mean[0]))); 
+        threshG = exp(-(sigma[1][0] * (G - mean[1]) + sigma[1][1] * pow((G - mean[1]),2)));
+
+        //cout << threshR << ' ' << threshG << endl;
+
+        if((threshR >= .9 && threshG >= 1.0 && threshG < 1.2) || (threshR <= .8 && threshR >= .7 && threshG > 1.1) )
+        {
+          TestImage.setPixelVal(j, i, White);
+        }
+        else
+        {
+          TestImage.setPixelVal(j, i, Black);
+        }
+      }
+}
+writeImage(out6, TestImage);
+
 
 //Write Output image
-writeImage(out, MyImage);
 
 
 	//return 0
