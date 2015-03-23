@@ -32,11 +32,11 @@ int main()
 
 //Variables
 char pic1[30] = "Training_1.ppm";
-char out1[30] = "Output_1.ppm";
+char out1[30] = "Output_1A.ppm";
 char pic3[30] = "Training_3.ppm";
-char out3[30] = "Output_3.ppm";
+char out3[30] = "Output_3A.ppm";
 char pic6[30] = "Training_6.ppm";
-char out6[30] = "Output_6.ppm";
+char out6[30] = "Output_6A.ppm";
 double mean[2], sigma[2][2] = {{0,0}, {0,0}};
 int N,M,Q;
 double R,G,bottom, threshR, threshG;
