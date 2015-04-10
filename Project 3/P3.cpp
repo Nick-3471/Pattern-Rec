@@ -55,12 +55,31 @@ while(drnt = readdir(dr))
     Counter++;
 }
 
+//////////////////////////////////////////////////////////////////////
+//Mean
+/////////////////////////////////////////////////////////////////////
+cout << endl << "Calulating mean...";
+vector<double> mean;
+for (int i = 0; i < 2880; ++i)
+    {
+    double sum = 0;
+    for (int j = 0; j < 1204; ++j)
+        {
+        sum += faces[j][i];
+        }
+    mean.push_back(sum/1204);
+    }
+faces.push_back(mean);
 
-cout << endl << "Writing out pictures..."<< endl;
+
+
+
+
 //////////////////////////////////////////////////////////////////////
 //OUTPUT
 /////////////////////////////////////////////////////////////////////
-for(int g = 0; g < Counter; g++)
+cout << endl << "Writing out pictures..."<< endl;
+for(int g = 0; g < Counter +1; g++)
 {
     ostringstream outfilename;
     outfilename << "Test/" << g << ".pgm";
