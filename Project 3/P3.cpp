@@ -13,21 +13,20 @@
 #include <list>
 #include <vector>
 #include <dirent.h>
+#include "eigen/Eigen/Core"
 
 using namespace std;
 
-vector<double> readImage(ifstream& file);
+void ReadImage(ifstream& file, vector<double> &face);
 void wrightImage(string file,vector<double> face);
 
-
-
+int Counter = 0;
 
 int main()
 {
 //Variables
-vector< vector<double> > faces(1204, vector<double>(2880,0));
-int q = 0;
-
+vector< vector<double> > faces (1204, vector<double>(2880,0));
+int** test;
 
 /////////////////////////////////////////////////////////////////////
 //INPUT
@@ -36,31 +35,36 @@ DIR* dr = NULL;
 char* dirn = new char[50];
 struct dirent *drnt = NULL;
 
+cout << "Enter File name to import pictures: ";
+
 gets(dirn);
 dr = opendir(dirn);
 drnt = readdir(dr);
 drnt = readdir(dr);
-drnt = readdir(dr);
 
-stringstream filename;
-filename << dirn << "/" << drnt->d_name;
-ifstream picture(filename.str().c_str());
-
-for(int d = 0; d < 2; d++)
+cout << endl << "Reading in pictures...";
+while(drnt = readdir(dr))
 {
-	faces.push_back(readImage(picture));
-	q++;
-}
-closedir(dr);
+    stringstream filename;
 
-/////////////////////////////////////////////////////////////////////
+    filename << dirn << "/" << drnt->d_name;
+    ifstream picture(filename.str().c_str());
+
+    ReadImage(picture, faces[Counter]);
+    
+    Counter++;
+}
+
+
+cout << endl << "Writing out pictures..."<< endl;
+//////////////////////////////////////////////////////////////////////
 //OUTPUT
 /////////////////////////////////////////////////////////////////////
-for(int g = 0; g < 1204; g++)
+for(int g = 0; g < Counter; g++)
 {
-        ostringstream filename;
-        filename << "Test/" << g << ".pgm";
-        wrightImage(filename.str(), faces[g]);
+    ostringstream outfilename;
+    outfilename << "Test/" << g << ".pgm";
+    wrightImage(outfilename.str(), faces[g]);
 }
 	
 
@@ -73,41 +77,65 @@ for(int g = 0; g < 1204; g++)
 /////////////////////////////////////////////////////////////////////////////////////////
 //ReadImage
 /////////////////////////////////////////////////////////////////////////////////////////
-vector<double> readImage(ifstream& file)
+void ReadImage(ifstream& file, vector<double> &face)
 {
- 	vector<double> values;
-    std::string line;
-    getline(file, line); // Skip P2 line
-    getline(file, line); // Skip width line
-    getline(file, line); // Skip height line
-    getline(file, line); // Skip max value line
+ int i, j, M, N, Q;
+ unsigned char *image;
+ char header [100], *ptr;
+ 
+ string list;
+ getline(file, list);
 
-    int val;
-    while(file >> val)
-    {
-        values.push_back(val);
-    }
-    return values;
+
+
+
+ M = 48;
+ N= 60;
+ Q = 255;
+
+ image = (unsigned char *) new unsigned char [M*N];
+
+ file.read( reinterpret_cast<char *>(image), (M*N)*sizeof(unsigned char));
+
+ file.close();
+
+ //
+ // Convert the unsigned characters to integers
+ //
+
+ for(i=0; i<N; i++)
+   for(j=0; j<M; j++)
+     face[i*M+j] = (double)image[i*M+j];
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //WriteImage
 /////////////////////////////////////////////////////////////////////////////////////////
-void wrightImage(string file,vector<double> face)
+void wrightImage(string file, vector<double> face)
 {
-	stringstream filename;
-	filename << file;
-	ofstream image_file(filename.str().c_str());
-	image_file << "P2" << endl << 48 << endl << 60 << endl << 255 << endl;
+stringstream filename;
+filename << file;
+ofstream picture(filename.str().c_str());
 
-for (int i = 0; i < 2880; ++i)
-    {
-        int val = face[i];
-        if (val < 0)
-        {
-            val = 0;
-        }
-        image_file << val << " ";
-    }
-    image_file.close();
+ int i, j, M, N, Q;
+ unsigned char *image;
+ char header [100], *ptr;
+
+ M = 48;
+ N= 60;
+ Q = 255;
+
+image = (unsigned char *) new unsigned char [M*N];
+
+ for(i=0; i<N; i++)
+   for(j=0; j<M; j++)
+     image[i*M+j] = (unsigned char)face[i*M+j];
+
+picture << "P5"  << endl;
+picture << 48 << " " << 60 << endl;
+picture << 255 << endl;
+
+picture.write( reinterpret_cast<char *>(image), (M*N)*sizeof(unsigned char));
+
+picture.close();
 }
