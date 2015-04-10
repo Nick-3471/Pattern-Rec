@@ -42,7 +42,7 @@ dr = opendir(dirn);
 drnt = readdir(dr);
 drnt = readdir(dr);
 
-cout << endl << "Reading in pictures...";
+cout << endl << "Reading in pictures..." << endl;
 while(drnt = readdir(dr))
 {
     stringstream filename;
@@ -58,7 +58,7 @@ while(drnt = readdir(dr))
 //////////////////////////////////////////////////////////////////////
 //Mean
 /////////////////////////////////////////////////////////////////////
-cout << endl << "Calulating mean...";
+cout << "Calulating Mean..." << endl;
 vector<double> mean;
 for (int i = 0; i < 2880; ++i)
     {
@@ -71,14 +71,27 @@ for (int i = 0; i < 2880; ++i)
     }
 faces.push_back(mean);
 
+//////////////////////////////////////////////////////////////////////
+//Covariance
+/////////////////////////////////////////////////////////////////////
+cout << "Creating Covariance Matrix" << endl;
+vector< vector<double> > Trans (0, vector<double>(2880,0));
 
-
+for(int s = 0; s < 2880; s++)
+{
+    vector<double> row (0, 0);
+    for(int t = 0; t < 1204; t++)
+    {
+        row.push_back(faces[t][s]);
+    }
+    Trans.push_back(row);
+}
 
 
 //////////////////////////////////////////////////////////////////////
 //OUTPUT
 /////////////////////////////////////////////////////////////////////
-cout << endl << "Writing out pictures..."<< endl;
+cout << "Writing out pictures..." << endl;
 for(int g = 0; g < Counter +1; g++)
 {
     ostringstream outfilename;
