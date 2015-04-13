@@ -338,13 +338,16 @@ int main(int argc, const char * argv[])
         }
     }
 
-    double Malldist
+    
+    double Sum = 0;
+    double Malldist = 999999;
     for(int rr = 0;  rr < thrsh; ++rr)
     {
         for(int cc = 0; cc < N; ++cc)
         {
-            Malldist = min(W.array[rr][cc] - E.array[rr][cc])
+            Sum += pow(W.array[rr][cc] - E.array[rr][cc],2);
         }
+        Malldist = min(Malldist, Sum);
     }
 
     return 0;
