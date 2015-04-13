@@ -268,6 +268,7 @@ int main(int argc, const char * argv[])
         }
     }
 
+
     double sumVal = 0;
     std::vector<double> EigenValues = eigensystem(&S).first;
     for(int i = 0; i < Eigenfaces; ++i)
@@ -291,8 +292,9 @@ int main(int argc, const char * argv[])
     /*Testing*/
     Matrix D = Matrix(Faces2, M, read_training_data2());
     
+
     /* Subtract the mean from each image */
-    for (int r = 0; r < N; ++r)
+    for (int r = 0; r < Faces2; ++r)
     {
         for (int c = 0; c < M; ++c)
         {
@@ -305,8 +307,8 @@ int main(int argc, const char * argv[])
     }
 
     /* Find eigenfaces */
-    Matrix Z = Matrix(Eigenfaces, M);
-    for (int r = 0; r < Eigenfaces; ++r)
+    Matrix Z = Matrix(Faces2, M);
+    for (int r = 0; r < Faces2; ++r)
     {
         Matrix eigenfaceB = V.getRow(r)*D;
 
@@ -334,11 +336,11 @@ int main(int argc, const char * argv[])
     {
         for (int c = 0; c < N; ++c)
         {
-            E.array[r][c] = (Z.getRow(r)*B.getRow(c).transpose()).array[0][0];
+            E.array[r][c] = (Z.getRow(r)*D.getRow(c).transpose()).array[0][0];
         }
     }
 
-    
+    cout << "Threshold: " << thrsh << endl;
     double Sum = 0;
     double Malldist = 999999;
     for(int rr = 0;  rr < thrsh; ++rr)
