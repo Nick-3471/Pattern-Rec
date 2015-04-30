@@ -32,13 +32,13 @@ using namespace std;
 int main()
 {
 	//Varibles
-	svm_problem *Tr_1;
-	svm_parameter *param;
+	svm_problem Tr_1;
+	svm_parameter param;
 	svm_model *model;
 	svm_node **node = new svm_node*[train_Size];
 
 	double* temp = new double[train_Size];
-	//Tr_1->y = new double[train_Size];
+	//Tr_1.y = new double[train_Size];
 
 	//////////////////////////////////////////////
 	//Getting Training data
@@ -52,7 +52,7 @@ int main()
 	//ifstream X(TtrFile.str().c_str());
 	ifstream X("genderdata/16_20/trPCA_01.txt");
 
-	Tr_1->x = new svm_node*[train_Size];
+	Tr_1.x = new svm_node*[train_Size];
 	for(int q = 0; q < train_Size; q++)
 	{
 		node[q] = new svm_node[eigen_Size + 1];
@@ -67,7 +67,7 @@ int main()
 		node[q][eigen_Size].value = 0.0;
 
 	}
-	Tr_1->x = node;
+	Tr_1.x = node;
 
 	//TtrFile << Path << "TtrPCA_" << Fold <<".txt";
 	//ifstream Y(TtrFile.str().c_str());
@@ -77,21 +77,23 @@ int main()
 	{	
 		Y >> temp[i];
 	}
-	Tr_1->y = temp;
+	Tr_1.y = temp;
 
 	//Setting l
-	Tr_1->l = train_Size;
+	Tr_1.l = train_Size;
 
 	/////////////////////////////////////////////
 	//Training using data
 	/////////////////////////////////////////////
 	//Initalizing Param
-	//param->svm_type = 0;
-	//param->kernel_type = mode;
-	/*param-> degree = 3;
-	param->gamma = (1/eigen_Size);
-	param->coef0 = 0.0;*/
-	//param->C = our_C;
+	/*
+	param.svm_type = 0;
+	param.kernel_type = mode;
+	param. degree = 3;
+	param.gamma = (1/eigen_Size);
+	param.coef0 = 0.0;
+	param.C = our_C; 
+	*/
 
 	// Checking parameters
 	//svm_check_parameter(Tr_1, param);
@@ -103,12 +105,13 @@ int main()
 	{
 		for(int i = 0; i <= eigen_Size; i++)
 		{
-			cout << Tr_1->x[q][i].value << ' ';
+			cout << Tr_1.x[q][i].value << ' ';
 		}
 		cout << endl << endl;
 	}
-	model = svm_train(Tr_1, param);
-
+	
+	model = svm_train(&Tr_1, &param);
+	
 
 
 	return 0;
