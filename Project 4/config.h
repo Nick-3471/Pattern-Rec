@@ -12,4 +12,4 @@ const std::string Training = "genderdata/16_20/trPCA_01.txt";
 const std::string Target = "genderdata/16_20/TtrPCA_01.txt";
 const std::string Fold = "01";
 ///////////////////////
-const int mode = 1; //1 for poly -- 2 for rad
+const int mode = 1; //1 for poly -- 2 for rbf

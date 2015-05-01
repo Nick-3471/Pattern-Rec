@@ -57,7 +57,7 @@ int main()
 	for(int q = 0; q < train_Size; q++)
 	{
 		node[q] = new svm_node[eigen_Size + 1];
-		for(int i = 0; i <= eigen_Size; i++)
+		for(int i = 0; i < eigen_Size; i++)
 		{
 			node[q][i].index = i;
 			//node[q][i].value = X.get();
@@ -69,7 +69,6 @@ int main()
 
 		//gets rest of line
 		getline(X, line);
-
 	}
 	Tr_1.x = node;
 	X.close();
@@ -106,7 +105,7 @@ int main()
 
 	//Generated model
 	model = svm_train(&Tr_1, &param);
-	
+
 	/////////////////////////////////////////////
 	//Testing using data
 	/////////////////////////////////////////////
@@ -132,9 +131,17 @@ int main()
 	}	
 	X.close();
 
-/////////////////////////////
-//Call predict at this point
-/////////////////////////////
+	/////////////////////////////
+	//Call predict at this point
+	/////////////////////////////
+
+double testClass;
+	for(int i = 0; i< test_Size; i++)
+	{
+		testClass = svm_predict(model, tests[i]);
+		cout<<testClass<<endl;
+	}
+
 
 	return 0;
 }
