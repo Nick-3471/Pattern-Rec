@@ -36,7 +36,8 @@ int main()
 	svm_parameter param;
 	svm_model *model;
 	svm_node **node = new svm_node*[train_Size];
-
+	svm_node **tests = new svm_node*[test_Size];
+	string line;
 	double* temp = new double[train_Size];
 	//Tr_1.y = new double[train_Size];
 
@@ -44,13 +45,13 @@ int main()
 	//Getting Training data
 	/////////////////////////////////////////////
 
-	// Getting y
-	stringstream TtrFile;
+	//stringstream TtrFile;
 
 	//Getting x
 	//TtrFile << Path << "trPCA_" << Fold <<".txt";
 	//ifstream X(TtrFile.str().c_str());
-	ifstream X("genderdata/16_20/trPCA_01.txt");
+	ifstream X;
+	X.open("genderdata/16_20/trPCA_01.txt");
 
 	Tr_1.x = new svm_node*[train_Size];
 	for(int q = 0; q < train_Size; q++)
@@ -66,18 +67,25 @@ int main()
 		node[q][eigen_Size].index = -1;
 		node[q][eigen_Size].value = 0.0;
 
+		//gets rest of line
+		getline(X, line);
+
 	}
 	Tr_1.x = node;
+	X.close();
 
+	// Getting y
 	//TtrFile << Path << "TtrPCA_" << Fold <<".txt";
 	//ifstream Y(TtrFile.str().c_str());
-	ifstream Y("genderdata/16_20/TtrPCA_01.txt");
+	//ifstream Y("genderdata/16_20/TtrPCA_01.txt");
+	X.open("genderdata/16_20/TtrPCA_01.txt");
 
 	for(int i = 0; i < train_Size; i++)
 	{	
-		Y >> temp[i];
+		X >> temp[i];
 	}
 	Tr_1.y = temp;
+	X.close();
 
 	//Setting l
 	Tr_1.l = train_Size;
@@ -86,33 +94,47 @@ int main()
 	//Training using data
 	/////////////////////////////////////////////
 	//Initalizing Param
-	/*
 	param.svm_type = 0;
 	param.kernel_type = mode;
 	param. degree = 3;
 	param.gamma = (1/eigen_Size);
 	param.coef0 = 0.0;
 	param.C = our_C; 
-	*/
-
+	
 	// Checking parameters
-	//svm_check_parameter(Tr_1, param);
+	svm_check_parameter(&Tr_1, &param);
 
 	//Generated model
-
-
-	for(int q = 0; q < train_Size; q++)
-	{
-		for(int i = 0; i <= eigen_Size; i++)
-		{
-			cout << Tr_1.x[q][i].value << ' ';
-		}
-		cout << endl << endl;
-	}
-	
 	model = svm_train(&Tr_1, &param);
 	
+	/////////////////////////////////////////////
+	//Testing using data
+	/////////////////////////////////////////////
+	//Initalizing test data
+	
+	X.open("genderdata/16_20/tsPCA_01.txt");
 
+	for(int q = 0; q < test_Size; q++)
+	{
+		tests[q] = new svm_node[eigen_Size + 1];
+		for(int i = 0; i < eigen_Size; i++)
+		{
+			tests[q][i].index = i;
+			X >> tests[q][i].value;
+		}
+		//Setting end of vector
+		tests[q][eigen_Size].index = -1;
+		tests[q][eigen_Size].value = 0.0;
+
+		//gets rest of line
+		getline(X, line);
+
+	}	
+	X.close();
+
+/////////////////////////////
+//Call predict at this point
+/////////////////////////////
 
 	return 0;
 }
