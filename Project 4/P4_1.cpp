@@ -96,7 +96,7 @@ int main()
 	param.svm_type = 0;
 	param.kernel_type = mode;
 	param. degree = 3;
-	param.gamma = (1/eigen_Size);
+	param.gamma = (1.0);
 	param.coef0 = 0.0;
 	param.C = our_C; 
 	
