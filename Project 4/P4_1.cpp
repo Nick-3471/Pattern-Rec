@@ -134,14 +134,28 @@ int main()
 	/////////////////////////////
 	//Call predict at this point
 	/////////////////////////////
+	double* Error = new double[test_Size];	
+	double counter = 0.0;
 
-double testClass;
-	for(int i = 0; i< test_Size; i++)
+	X.open("genderdata/16_20/TtsPCA_01.txt");
+	for(int i = 0; i < test_Size; i++)
 	{
-		testClass = svm_predict(model, tests[i]);
-		cout<<testClass<<endl;
+		X >> Error[i];
 	}
 
+	double testClass;
+	for(int i = 0; i< 133; i++)
+	{
+		testClass = svm_predict(model, tests[i]);
+		cout << Error[i] << " " << testClass << endl;
+		if(testClass != Error[i])
+		{
+			counter++;
+		}
+
+	}
+
+	cout << counter << " -- " << (counter/test_Size)*100 << endl;
 
 	return 0;
 }
